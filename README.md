@@ -1,6 +1,6 @@
 # Data pipelines with airflow
 
-This repository is for the fith Data Engineering Nanodegree project from Udacity. This project implements a ETL Data pipeline using Apache Airflow, AWS S3  Bucket and Amazon Redshift.
+This repository is for the fifth Data Engineering Nanodegree project from Udacity. This project implements a ETL Data pipeline using Apache Airflow, AWS S3 Bucket and Amazon Redshift.
 
 Project sections:
 
@@ -17,7 +17,7 @@ Create the custom Airflow operators to perform tasks such as staging the data, f
 
 ## Data description
 
-The project uses data from [Million Song Dataset](https://labrosa.ee.columbia.edu/millionsong/) that is a freely-available collection of audio features and metadata for a million contemporary popular music tracks (300 GB). This data is open for exploration and research and for this project will only use a sample from the songs database and artist information in json format.
+The project uses data from [Million Song Dataset] (https://labrosa.ee.columbia.edu/millionsong/) that is a freely-available collection of audio features and metadata for a million contemporary popular music tracks (300 GB). This data is open for exploration and research and for this project will only use a sample from the songs database and artist information in json format.
   
 - **Song dataset**:  
   Json files are under */data/song_data* directory. The file format is:
@@ -33,14 +33,14 @@ The project uses data from [Million Song Dataset](https://labrosa.ee.columbia.ed
 {"artist":"Slipknot","auth":"Logged In","firstName":"Aiden","gender":"M","itemInSession":0,"lastName":"Ramirez","length":192.57424,"level":"paid","location":"New York-Newark-Jersey City, NY-NJ-PA","method":"PUT","page":"NextSong","registration":1540283578796.0,"sessionId":19,"song":"Opium Of The People (Album Version)","status":200,"ts":1541639510796,"userAgent":"\"Mozilla\/5.0 (Windows NT 6.1) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/36.0.1985.143 Safari\/537.36\"","userId":"20"}
 ```
 
-The data is available in the udacity buckets 
+The data is available in the Udacity buckets 
 
 ```
   Song data: s3://udacity-dend/song_data
   Log data: s3://udacity-dend/log_data
 
 ```
-The data paths are defined into the Airflow enviroment connection vairables.
+The data paths are defined into the Airflow environment connection variables.
 
 
 ## Database Model
@@ -50,7 +50,7 @@ The database will be designed for analytics using Fact and Dimensions tables on 
 **Staging Tables**
 
 ```
-  staging_events - Load the raw data from log events json files
+  staging_events - Load the raw data from log events json files.
   artist, auth, firstName, gender, itemInSession, lastName, length, level, location, method, page, registration, sessionId, song, status, ts, userAgent, userId
 
   staging_songs
@@ -74,27 +74,32 @@ The database will be designed for analytics using Fact and Dimensions tables on 
 
 ### Logic model
 
-![Logic model](https://github.com/Fer-Bonilla/Udacity-Data-Engineering-datawarehouse-with-aws-redshift/blob/main/redshift-udacity/DefaultLayout.svg)
+![Logic model](https://github.com/Fer-Bonilla/Udacity-Data-Engineering-data-pipelines-with-airflow/blob/main/redshift-udacity/DefaultLayout.svg)
 
 
 ## Project structure
 
 The project structure is based on the Udacity's project template:
-1. **test.ipynb** Notebook to verify the etl scripts execution
-2. **create_tables.py** drops and creates your tables. You run this file to reset your tables before each time you run your ETL scripts
-3. **etl.py** reads and processes files from song_data and log_data and loads them into the databse tables
-4. **sql_queries.py** contains all the sql queries for create and fill the tables
-5. **README.md** provides discussion on your project
-6. **swh.cfg** configuration parameters (Connection strindg and file paths)
+
+```
++ airflow + dags
+          + plugings  + helpers   + sql_queries.py: Insert sql stament definitions
+                      + operators + data_quality.py: This operator implements the data quality verification task, based on the BaseOperator
+                                  + load_dimension.py: This operator implements the LoadDimensionOperator class that execute the data load process from staging tables to dimension tables.
+                                  + load_fact.py: This operator implements the LoadFactOperator class that execute the data load process from staging tables to fact table.
+                                  + stage_redshift.py: This operator implements the data quality verification task, based on the BaseOperator
+          + create_tables.sql : drops and creates your tables. You run this file to reset your tables before each time you run your ETL scripts.
+
+```
 
 ## ETL Pipeline description
 
-### etl.py
-The ETL process is developed in the etl.py script. Data is load from the JSON files first to the staging tables from the json files (Songs and events). Using the Redshift services execute the data copy to the staging tables and then executes the data extraction to the fact and dimensions tables.
+### The ETL is defined in the airflow configuration. The first step executes de tables creation, then the data load into staging tables is executed, next data load into fact table ins executed and the last part is load data into dimensions tables. At the end, the quality check is executed counting the rows number in the dimension’s tables.
+
 
 ### ETL pipeline diagram
 
-![ETL pipeline diagram](https://github.com/Fer-Bonilla/Udacity-Data-Engineering-datawarehouse-with-aws-redshift/blob/main/images/ETL_pipeline.png)
+![ETL pipeline diagram](https://github.com/Fer-Bonilla/Udacity-Data-Engineering-data-pipelines-with-airflow/blob/main/images/airflow_pipeline.png)
 
 ## Instructions to run the pipeline
 
@@ -102,18 +107,20 @@ A. Components required
 
  1.	AWS amazon account
  2.	User created on IAM AWS and administrative role to connect from remote connection
- 3.	Jupyter notebooks environment available
- 4.	Python packages: psycopg2 and python-sql
+ 3.	Redshift cluster created in the AWS services console
+ 4.	Jupyter notebooks environment available
+ 5.	Airflow environment 
 
 B Running the pipeline
 
  1.	Clone the repository
  2.	Create IAM role and user
  3.	Create the Redshift cluster and get the connection data
- 4.	Configure the connection values in the dwh.cfg file
- 5.	Run create_tables.py (Drop tables and create again)
- 6.	Run etl.py (Run the ETL process)
- 7.	Run test.ipynb notebook to validate the data. (Execute some selects and counts)
+ 4.	Initialize the airflow service
+ 5.	Configure the connection values and access key in the airflow administration options (connections)
+ 6.	Execute the DAG
+ 7.	Verify the log
+
 
 ## Author 
 Fernando Bonilla [linkedin](https://www.linkedin.com/in/fer-bonilla/)
