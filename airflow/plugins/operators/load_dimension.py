@@ -52,7 +52,7 @@ class LoadDimensionOperator(BaseOperator):
         self.aws_credentials_id=aws_credentials_id
         self.sql=sql
         self.table=table
-        self.insert_mode=append_data
+        self.insert_mode=insert_mode
 
     def execute(self, context):
 

@@ -64,13 +64,12 @@ default_args = {
     'depends_on_past': False,
     'retries': 3,
     'retry_delay': timedelta(minutes=5),
-    'email_on_retry': False,
     'catchup': False,
 }
 
 
 # Create the dag object 
-dag = DAG('Sparkify airflow pipeline',
+dag = DAG('Sparkify_airflow_pipeline',
           default_args=default_args,
           description='Load and transform data in Redshift with Airflow',
           schedule_interval='0 * * * *'
@@ -128,7 +127,6 @@ load_songplays_table = LoadFactOperator(
 load_user_dimension_table = LoadDimensionOperator(
     task_id='Load_user_dim_table',
     dag=dag,
-        
     redshift_conn_id="redshift",
     aws_credentials_id="aws_credentials",
     sql=SqlQueries.user_table_insert,
@@ -177,7 +175,7 @@ run_quality_checks = DataQualityOperator(
     aws_credentials_id="aws_credentials",
     sql_quality_checks=[
                {'sql_quality_check': "SELECT COUNT(*) FROM users WHERE userid IS NULL", 'expected_result': 0},
-               {'sql_quality_check': "SELECT COUNT(*) FROM songs WHERE songid IS NULL", 'expected_result': 0}       
+               {'sql_quality_check': "SELECT COUNT(*) FROM songs WHERE songid IS NULL", 'expected_result': 0},       
                {'sql_quality_check': "SELECT COUNT(*) FROM artists WHERE userid IS NUL", 'expected_result': 0},
                {'sql_quality_check': "SELECT COUNT(*) FROM time WHERE songid IS NULL", 'expected_result': 0}
     ]

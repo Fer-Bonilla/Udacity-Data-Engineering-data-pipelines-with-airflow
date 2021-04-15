@@ -48,7 +48,7 @@ class DataQualityOperator(BaseOperator):
         
         self.redshift_conn_id=redshift_conn_id
         self.aws_credentials_id=aws_credentials_id
-        self.dq_checks=dq_checks
+        self.sql_quality_checks=sql_quality_checks
 
     def execute(self, context):
         
