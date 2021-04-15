@@ -1,17 +1,19 @@
 # Data pipelines with airflow
 
-This repository is for the third Data Engineering Nanodegree project from Udacity. This project implements a Data warehouse model and pipeline using AWS S3  Bucket and Amazon Redshift.
+This repository is for the fith Data Engineering Nanodegree project from Udacity. This project implements a ETL Data pipeline using Apache Airflow, AWS S3  Bucket and Amazon Redshift.
 
-- Understanding the problem to solve
-- Modeling the database and pipeline model
-- Create the database schema
-- ETL development in Python
+Project sections:
 
+- Problem understanding
+- Data description
+- Database Model
+- Project structure
+- ETL Pipeline description
+- Instructions to run the pipeline
 
 ## Problem understanding
 
-Build and test an ETL pipeline for a database hosted on AWS Redshift with the data warehouse model. The data need to be load from S3 to staging tables on Redshift and execute SQL statements that create the analytics tables from these staging tables.
-
+Create the custom Airflow operators to perform tasks such as staging the data, filling the data warehouse, and running checks on the data as the final step.
 
 ## Data description
 
@@ -38,7 +40,7 @@ The data is available in the udacity buckets
   Log data: s3://udacity-dend/log_data
 
 ```
-Paths pointing to S3 buckets are defined in the dwh.dfg file.
+The data paths are defined into the Airflow enviroment connection vairables.
 
 
 ## Database Model
