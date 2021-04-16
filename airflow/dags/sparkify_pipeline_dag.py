@@ -60,7 +60,8 @@ from helpers import SqlQueries
 # Load default arguments to control the airflow task execution
 default_args = {
     'owner': 'udacity',
-    'start_date': datetime(2021, 1, 12),
+    'start_date': datetime(2021, 4, 15),
+    'email_on_retry': False,
     'depends_on_past': False,
     'retries': 3,
     'retry_delay': timedelta(minutes=5),
@@ -72,7 +73,8 @@ default_args = {
 dag = DAG('Sparkify_airflow_pipeline',
           default_args=default_args,
           description='Load and transform data in Redshift with Airflow',
-          schedule_interval='0 * * * *'
+          schedule_interval='0 * * * *',
+          max_active_runs=1
         )
 
 
@@ -97,7 +99,8 @@ stage_events_to_redshift = StageToRedshiftOperator(
     aws_credentials_id="aws_credentials",
     s3_bucket="udacity-dend",
     s3_key="log_data",
-    json="s3://udacity-dend/log_json_path.json"
+    json="s3://udacity-dend/log_json_path.json",
+    region='us-west-2'
 )
 
 # Execute the data load from the s3 bucket to the events staging table
@@ -109,7 +112,8 @@ stage_songs_to_redshift = StageToRedshiftOperator(
     aws_credentials_id="aws_credentials",
     s3_bucket="udacity-dend",
     s3_key="song_data",
-    json="auto"
+    json="auto",
+    region='us-west-2'
 )
 
 
